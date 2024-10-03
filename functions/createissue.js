@@ -1,8 +1,3 @@
-const fetch = require("node-fetch");
-const jwt = require("jsonwebtoken");
-const fs = require("fs");
-const path = require("path");
-
 // Charger la clé privée de l'app GitHub depuis Netlify Environment Variables
 const privateKey = process.env.GITHUB_PRIVATE_KEY;
 
@@ -14,11 +9,13 @@ const generateJWT = () => {
     iss: process.env.GITHUB_APP_ID, // ID de l'App GitHub (de Netlify Environment Variables)
   };
 
-  return jwt.sign(payload, privateKey, { algorithm: "RS256" });
+  return require("jsonwebtoken").sign(payload, privateKey, { algorithm: "RS256" });
 };
 
-// Obtenir le token d'installation de l'App GitHub
+// Obtenir le token d'installation de l'App GitHub avec une importation dynamique
 const getInstallationToken = async (installationId) => {
+  const fetch = (await import("node-fetch")).default;
+
   const jwtToken = generateJWT();
 
   const response = await fetch(`https://api.github.com/app/installations/${installationId}/access_tokens`, {
@@ -43,6 +40,7 @@ exports.handler = async function (event, context) {
     const token = await getInstallationToken(installationId);
 
     // Créer une issue sur GitHub en utilisant le token d'installation
+    const fetch = (await import("node-fetch")).default;
     const response = await fetch("https://api.github.com/repos/alexiscolin/wallet-security-lists/issues", {
       method: "POST",
       headers: {
