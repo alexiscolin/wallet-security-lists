@@ -1,40 +1,71 @@
 const fetch = require("node-fetch");
+const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const path = require("path");
 
+// Charger la clé privée de l'app GitHub depuis Netlify Environment Variables
+const privateKey = process.env.GITHUB_PRIVATE_KEY;
+
+// Générer un JWT pour s'authentifier auprès de l'API GitHub
+const generateJWT = () => {
+  const payload = {
+    iat: Math.floor(Date.now() / 1000), // Temps actuel
+    exp: Math.floor(Date.now() / 1000) + 600, // Expire dans 10 minutes
+    iss: process.env.GITHUB_APP_ID, // ID de l'App GitHub (de Netlify Environment Variables)
+  };
+
+  return jwt.sign(payload, privateKey, { algorithm: "RS256" });
+};
+
+// Obtenir le token d'installation de l'App GitHub
+const getInstallationToken = async (installationId) => {
+  const jwtToken = generateJWT();
+
+  const response = await fetch(`https://api.github.com/app/installations/${installationId}/access_tokens`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${jwtToken}`,
+      Accept: "application/vnd.github.v3+json",
+    },
+  });
+
+  const data = await response.json();
+  return data.token; // Token d'installation
+};
+
+// Fonction principale pour créer une issue via l'API GitHub
 exports.handler = async function (event, context) {
-  // Récupérer les données du corps de la requête (par exemple, title et body)
-  const { title, body } = JSON.parse(event.body);
-
-  // Remplace par le token GitHub stocké en variable d'environnement dans Netlify
-  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+  const { title, body } = JSON.parse(event.body); // Récupérer le titre et le corps de l'issue
 
   try {
-    // Appel à l'API GitHub pour déclencher le workflow
-    const response = await fetch("https://api.github.com/repos/alexiscolin/wallet-security-lists/actions/workflows/create-issue.yml/dispatches", {
+    // Obtenir le token d'installation pour ton App GitHub
+    const installationId = process.env.GITHUB_INSTALLATION_ID; // ID de l'installation (de Netlify Environment Variables)
+    const token = await getInstallationToken(installationId);
+
+    // Créer une issue sur GitHub en utilisant le token d'installation
+    const response = await fetch("https://api.github.com/repos/alexiscolin/wallet-security-lists/issues", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${GITHUB_TOKEN}`, // Utilisation du token GitHub sécurisé
+        Authorization: `token ${token}`, // Utiliser le token d'installation
         Accept: "application/vnd.github.v3+json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        ref: "main", // Branche à partir de laquelle exécuter le workflow
-        inputs: {
-          title: title, // Le titre de l'issue
-          body: body, // Le corps de l'issue
-        },
+        title: title,
+        body: body,
       }),
     });
 
     if (response.ok) {
       return {
         statusCode: 200,
-        body: JSON.stringify({ message: "Le workflow a été déclenché avec succès." }),
+        body: JSON.stringify({ message: "Issue créée avec succès." }),
       };
     } else {
       const error = await response.json();
       return {
         statusCode: response.status,
-        body: JSON.stringify({ message: "Erreur lors du déclenchement du workflow", error }),
+        body: JSON.stringify({ message: "Erreur lors de la création de l'issue", error }),
       };
     }
   } catch (error) {
