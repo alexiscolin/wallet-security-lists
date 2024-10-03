@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       title:
-        description: 'Issue\'s title'
+        description: "Issue's title"
         required: true
         type: string
       body:
-        description: 'Issue\'s body'
+        description: "Issue's body"
         required: true
         type: string
 
@@ -20,9 +20,9 @@ jobs:
       issues: write
 
     steps:
-    - name: Create a GitHub issue
-      uses: peter-evans/create-issue@v3
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}  # Le token est sécurisé dans GitHub Secrets
-        title: ${{ github.event.inputs.title }}
-        body: ${{ github.event.inputs.body }}
+      - name: Create a GitHub issue
+        uses: peter-evans/create-issue@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }} # Le token est sécurisé dans GitHub Secrets
+          title: ${{ github.event.inputs.title }}
+          body: ${{ github.event.inputs.body }}
