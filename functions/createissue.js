@@ -1,5 +1,5 @@
 // Charger la clé privée de l'app GitHub depuis Netlify Environment Variables
-const privateKey = process.env.GITHUB_PRIVATE_KEY;
+const privateKey = process.env.GITHUB_PRIVATE_KEY.replace(/\\n/g, "\n");
 
 // Générer un JWT pour s'authentifier auprès de l'API GitHub
 const generateJWT = () => {
@@ -9,6 +9,7 @@ const generateJWT = () => {
     iss: process.env.GITHUB_APP_ID, // ID de l'App GitHub (de Netlify Environment Variables)
   };
 
+  // Utilisation de RS256 avec la clé RSA privée
   return require("jsonwebtoken").sign(payload, privateKey, { algorithm: "RS256" });
 };
 
