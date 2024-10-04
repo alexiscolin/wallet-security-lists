@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 const { getInstallationToken } = require("./github-access");
 const { fetchYamlTemplate, convertYamlToMarkdown, getSupportedTypes } = require("./issue-templates");
 
