@@ -16,15 +16,19 @@ exports.handler = async function (event, context) {
       };
     }
 
+    // Obtenir le token d'installation de l'application GitHub
     const installationId = process.env.GITHUB_INSTALLATION_ID;
     const token = await getInstallationToken(installationId);
 
+    // Lire le template YAML correspondant depuis le système de fichiers local
     const yamlTemplateFile = `${type.toLowerCase()}-add.yaml`;
     const yamlContent = fetchYamlTemplate(yamlTemplateFile); // Récupérer le contenu YAML
 
+    // Convertir le YAML en Markdown avec les données soumises par l'utilisateur
     const issueBody = convertYamlToMarkdown(yamlContent, data);
 
-    const response = await fetch(process.env.GITHUB_REPO_ISSUES_ENDPOINT, {
+    // Créer une issue sur GitHub avec les données soumises et le template Markdown
+    const response = await fetch("https://api.github.com/repos/allinbits/wallet-security-lists/issues", {
       method: "POST",
       headers: {
         Authorization: `token ${token}`,
