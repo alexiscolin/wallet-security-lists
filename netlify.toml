@@ -1,5 +1,5 @@
 [build]
   functions = "functions"
 
-[[functions]]
+[functions]
   included_files = [".github/ISSUE_TEMPLATE/**"]
