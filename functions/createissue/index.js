@@ -28,7 +28,7 @@ exports.handler = async function (event, context) {
     const issueBody = convertYamlToMarkdown(yamlContent, data);
 
     // Créer une issue sur GitHub avec les données soumises et le template Markdown
-    const response = await fetch("https://github.com/alexiscolin/wallet-security-lists", {
+    const response = await fetch("https://github.com/alexiscolin/wallet-security-lists/issues", {
       method: "POST",
       headers: {
         Authorization: `token ${token}`,
