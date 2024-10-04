@@ -20,7 +20,7 @@ exports.handler = async function (event, context) {
     const yamlContent = fetchYamlTemplate(`${type.toLowerCase()}-add.yaml`);
     const issueBody = convertYamlToMarkdown(yamlContent, data);
 
-    const response = await fetch(process.env.GITHUB_REPO_ISSUES_ENDPOINT, {
+    const response = await fetch("https://github.com/alexiscolin/wallet-security-lists/issues", {
       method: "POST",
       headers: {
         Authorization: `token ${token}`,
