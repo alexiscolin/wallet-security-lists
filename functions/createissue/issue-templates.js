@@ -24,44 +24,44 @@ const fetchData = async (token, element, body) => {
 const createIssue = async (token, type, name, details) => {
   const templates = {
     Chain: `
-        ### Chain Name
-        ${name}
+### Chain Name
+${name}
         
-        ### Chain Description
-        ${details.description}
+### Chain Description
+${details.description}
         
-        ### Chain Type
-        ${details.type}
+### Chain Type
+${details.type}
         
-        ### Chain Official Documentation
-        ${details.documentation}
+### Chain Official Documentation
+${details.documentation}
       `,
     Asset: `
-        ### Asset Name
-        ${name}
+### Asset Name
+${name}
         
-        ### Asset Description
-        ${details.description}
+### Asset Description
+${details.description}
         
-        ### Asset Type
-        ${details.type}
+### Asset Type
+${details.type}
         
-        ### Official Documentation
-        ${details.documentation}
+### Official Documentation
+${details.documentation}
       `,
     Site: `
-        ### Site Name
-        ${name}
+### Site Name
+${name}
+
+### Site URL
+${details.url}
         
-        ### Site URL
-        ${details.url}
+### Site Description
+${details.description}
         
-        ### Site Description
-        ${details.description}
-        
-        ### Site Category
-        ${details.category}
-      `,
+### Site Category
+${details.category}
+`,
   };
 
   const body = templates[type];
