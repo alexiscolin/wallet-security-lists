@@ -1,4 +1,7 @@
+const fetch = require("node-fetch");
+
 const privateKey = process.env.GITHUB_PRIVATE_KEY.replace(/\\n/g, "\n");
+
 const generateJWT = () => {
   const payload = {
     iat: Math.floor(Date.now() / 1000), // Temps actuel
@@ -9,7 +12,6 @@ const generateJWT = () => {
 };
 
 const getInstallationToken = async (installationId) => {
-  const fetch = (await import("node-fetch")).default;
   const jwtToken = generateJWT();
 
   const response = await fetch(`https://api.github.com/app/installations/${installationId}/access_tokens`, {
