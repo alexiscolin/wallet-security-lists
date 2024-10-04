@@ -10,9 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "js-yaml": "^4.1.0",
     "jsonwebtoken": "^9.0.2",
     "node-fetch": "^3.3.2",
-    "octokit": "^4.0.2",
-    "yaml": "^2.5.1"
+    "octokit": "^4.0.2"
   }
 }
