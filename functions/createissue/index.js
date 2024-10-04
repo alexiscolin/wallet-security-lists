@@ -14,7 +14,8 @@ exports.handler = async function (event, context) {
       };
     }
 
-    const token = await getInstallationToken(process.env.GITHUB_INSTALLATION_ID);
+    const installationId = process.env.GITHUB_INSTALLATION_ID;
+    const token = await getInstallationToken(installationId);
 
     const yamlContent = fetchYamlTemplate(`${type.toLowerCase()}-add.yaml`);
     const issueBody = convertYamlToMarkdown(yamlContent, data);
