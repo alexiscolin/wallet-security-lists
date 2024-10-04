@@ -5,7 +5,7 @@ const yaml = require("js-yaml");
 // Fonction pour récupérer le template YAML depuis la racine du dépôt
 const readTemplateFiles = () => {
   try {
-    const templateDir = path.join(process.cwd(), ".github", "ISSUE_TEMPLATE");
+    const templateDir = path.join(process.cwd(), "ISSUE_TEMPLATE");
     const files = fs.readdirSync(templateDir); // Lister les fichiers dans le répertoire
     return files.map((file) => path.join(templateDir, file)); // Retourner les chemins complets des fichiers
   } catch (error) {

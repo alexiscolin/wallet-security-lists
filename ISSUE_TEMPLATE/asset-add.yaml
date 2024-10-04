@@ -1,0 +1,40 @@
+name: Asset Add
+description: Add an asset to the blacklist
+title: "[Asset-add]: "
+body: 
+  - type: input
+    id: base-denom
+    attributes:
+      label: Base Denom
+      description: Enter the base denom of the asset in question.
+      placeholder: e.g. ufaketom
+    validations:
+      required: true
+  - type: input
+    id: chain-id
+    attributes:
+      label: Chain ID
+      description: Enter the chain ID of this asset's native chain.
+      placeholder: e.g. fakechain-3
+    validations:
+      required: true
+  - type: textarea
+    id: user-note    
+    attributes:
+      label: Notes
+      description: Why is this asset malicious? 
+      placeholder: e.g. Impersonates a legit asset
+    validations:
+      required: true
+  - type: dropdown
+    id: threat-level
+    attributes:
+      label: Threat level
+      description: What do you consider this chain's threat-level to be?
+      options: 
+        - 1 (Low) A warning should be displayed when interacting
+        - 2 (Medium) Asset must be explicitly enabled in settings before interacting
+        - 3 (High) Asset should not be allowed under any circumstances
+    validations:
+      required: true
+

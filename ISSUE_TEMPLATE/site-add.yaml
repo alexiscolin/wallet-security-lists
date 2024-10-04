@@ -1,0 +1,31 @@
+name: Site Add
+description: Add a site to the blacklist
+title: "[Site-add]: "
+body:
+  - type: input
+    id: url
+    attributes:
+      label: URL
+      description: Enter the URL of the site in question.
+      placeholder: e.g. phising-url.com
+    validations:
+      required: true
+  - type: textarea
+    id: user-note
+    attributes:
+      label: Notes
+      description: Why is this site malicious?
+      placeholder: e.g. Phising attempt
+    validations:
+      required: true
+  - type: dropdown
+    id: threat-level
+    attributes:
+      label: Threat level
+      description: What do you consider this site's threat-level to be?
+      options:
+        - 1 (Low) A warning should be displayed when interacting
+        - 2 (Medium) Site must be explicitly enabled in settings before interacting
+        - 3 (High) Site should not be allowed under any circumstances
+    validations:
+      required: true
