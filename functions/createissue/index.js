@@ -20,8 +20,6 @@ exports.handler = async function (event, context) {
     const yamlContent = fetchYamlTemplate(`${type.toLowerCase()}-add.yaml`);
     const issueBody = convertYamlToMarkdown(yamlContent, data);
 
-    console.log("GitHub Repo Issues Endpoint:", process.env.GITHUB_REPO_ISSUES_ENDPOINT);
-
     const response = await fetch(process.env.GITHUB_REPO_ISSUES_ENDPOINT, {
       method: "POST",
       headers: {
@@ -35,28 +33,16 @@ exports.handler = async function (event, context) {
       }),
     });
 
-    // Check if the response is JSON
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      const json = await response.json();
-      if (response.ok) {
-        return {
-          statusCode: 200,
-          body: JSON.stringify({ message: "Issue created successfully" }),
-        };
-      } else {
-        return {
-          statusCode: response.status,
-          body: JSON.stringify({ message: "Error creating issue", error: json }),
-        };
-      }
+    if (response.ok) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: "Issue created successfully" }),
+      };
     } else {
-      // If not JSON, retrieve the raw text to debug the error
-      const text = await response.text();
-      console.log("Response Text:", text); // Log the response for debugging
+      const error = await response.json();
       return {
         statusCode: response.status,
-        body: JSON.stringify({ message: "Error creating issue", error: text }),
+        body: JSON.stringify({ message: "Error creating issue", error }),
       };
     }
   } catch (error) {

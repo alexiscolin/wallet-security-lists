@@ -2,31 +2,27 @@ const fs = require("fs");
 const path = require("path");
 const yaml = require("js-yaml");
 
-// Function to retrieve the YAML template from the root of the repository
 const readTemplateFiles = () => {
   try {
-    // Correction here: remove templateFile and point directly to the template directory
     const templateDir = path.join(__dirname, "..", "..", ".github", "ISSUE_TEMPLATE");
-    const files = fs.readdirSync(templateDir); // List files in the directory
-    return files.map((file) => path.join(templateDir, file)); // Return the full paths of the files
+    const files = fs.readdirSync(templateDir);
+    return files.map((file) => path.join(templateDir, file));
   } catch (error) {
     throw new Error(`Error while reading template files: ${error.message}`);
   }
 };
 
-// Retrieve the list of issue types dynamically from the YAML files
 const getSupportedTypes = () => {
   try {
-    const files = readTemplateFiles(); // Read files from the templates directory
+    const files = readTemplateFiles();
 
-    // Extract the type (e.g., 'chain-add.yaml' → 'Chain')
     const supportedTypes = files
       .map((filePath) => {
-        const file = path.basename(filePath); // Get the file name from the full path
-        const match = file.match(/(\w+)-add\.yaml/); // Extract the name before '-add.yaml'
+        const file = path.basename(filePath);
+        const match = file.match(/(\w+)-add\.yaml/);
         return match ? match[1].charAt(0).toUpperCase() + match[1].slice(1) : null;
       })
-      .filter(Boolean); // Remove null values
+      .filter(Boolean);
 
     return supportedTypes;
   } catch (error) {
@@ -34,27 +30,24 @@ const getSupportedTypes = () => {
   }
 };
 
-// Function to retrieve the YAML template from the local file system
 const fetchYamlTemplate = (templateFile) => {
   try {
-    const files = readTemplateFiles(); // Read files from the templates directory
+    const files = readTemplateFiles();
 
-    // Find the file corresponding to the requested template
     const templatePath = files.find((filePath) => filePath.endsWith(templateFile));
     if (!templatePath) {
       throw new Error(`Template ${templateFile} not found`);
     }
 
-    const fileContent = fs.readFileSync(templatePath, "utf8"); // Read the YAML file
+    const fileContent = fs.readFileSync(templatePath, "utf8");
     return fileContent;
   } catch (error) {
     throw new Error(`Error while retrieving the local template: ${error.message}`);
   }
 };
 
-// Convert YAML to Markdown
 const convertYamlToMarkdown = (yamlContent, formData) => {
-  const parsedYaml = yaml.load(yamlContent); // Convert YAML to JavaScript object
+  const parsedYaml = yaml.load(yamlContent);
   let markdownContent = `### ${parsedYaml.name}\n\n${parsedYaml.description}\n\n`;
 
   parsedYaml.body.forEach((field) => {
@@ -74,7 +67,6 @@ const convertYamlToMarkdown = (yamlContent, formData) => {
   return markdownContent;
 };
 
-// Export functions
 module.exports = {
   getSupportedTypes,
   fetchYamlTemplate,
