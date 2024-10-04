@@ -2,16 +2,19 @@ const fs = require("fs");
 const path = require("path");
 const yaml = require("js-yaml");
 
+// Function to retrieve the YAML template from the root of the repository
 const readTemplateFiles = () => {
   try {
+    // Correction here: remove templateFile and point directly to the template directory
     const templateDir = path.join(__dirname, "..", "..", ".github", "ISSUE_TEMPLATE");
-    const files = fs.readdirSync(templateDir);
-    return files.map((file) => path.join(templateDir, file));
+    const files = fs.readdirSync(templateDir); // List files in the directory
+    return files.map((file) => path.join(templateDir, file)); // Return the full paths of the files
   } catch (error) {
     throw new Error(`Error while reading template files: ${error.message}`);
   }
 };
 
+// Retrieve the list of issue types dynamically from the YAML files
 const getSupportedTypes = () => {
   try {
     const files = readTemplateFiles(); // Read files from the templates directory
