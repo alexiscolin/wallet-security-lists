@@ -2,59 +2,52 @@ const fs = require("fs");
 const path = require("path");
 const yaml = require("js-yaml");
 
-// Fonction pour récupérer le template YAML depuis la racine du dépôt
 const readTemplateFiles = () => {
   try {
-    // Correction ici: supprimer templateFile et pointer directement sur le répertoire des templates
     const templateDir = path.join(__dirname, "..", "..", ".github", "ISSUE_TEMPLATE");
-    const files = fs.readdirSync(templateDir); // Lister les fichiers dans le répertoire
-    return files.map((file) => path.join(templateDir, file)); // Retourner les chemins complets des fichiers
+    const files = fs.readdirSync(templateDir);
+    return files.map((file) => path.join(templateDir, file));
   } catch (error) {
-    throw new Error(`Erreur lors de la lecture des fichiers de template: ${error.message}`);
+    throw new Error(`Error while reading template files: ${error.message}`);
   }
 };
 
-// Récupérer la liste des types d'issues dynamiquement à partir des fichiers YAML
 const getSupportedTypes = () => {
   try {
-    const files = readTemplateFiles(); // Lire les fichiers du répertoire des templates
+    const files = readTemplateFiles();
 
-    // Extraire le type (par exemple, 'chain-add.yaml' → 'Chain')
     const supportedTypes = files
       .map((filePath) => {
-        const file = path.basename(filePath); // Obtenir le nom du fichier à partir du chemin complet
-        const match = file.match(/(\w+)-add\.yaml/); // Extraire le nom avant '-add.yaml'
+        const file = path.basename(filePath);
+        const match = file.match(/(\w+)-add\.yaml/);
         return match ? match[1].charAt(0).toUpperCase() + match[1].slice(1) : null;
       })
-      .filter(Boolean); // Supprimer les nulls
+      .filter(Boolean);
 
     return supportedTypes;
   } catch (error) {
-    throw new Error(`Erreur lors de la récupération des types dynamiques: ${error.message}`);
+    throw new Error(`Error while retrieving supported types: ${error.message}`);
   }
 };
 
-// Fonction pour récupérer le template YAML depuis le système de fichiers local
 const fetchYamlTemplate = (templateFile) => {
   try {
-    const files = readTemplateFiles(); // Lire les fichiers du répertoire des templates
+    const files = readTemplateFiles();
 
-    // Trouver le fichier correspondant au template demandé
     const templatePath = files.find((filePath) => filePath.endsWith(templateFile));
     if (!templatePath) {
-      throw new Error(`Template ${templateFile} non trouvé`);
+      throw new Error(`Template ${templateFile} not found`);
     }
 
-    const fileContent = fs.readFileSync(templatePath, "utf8"); // Lire le fichier YAML
+    const fileContent = fs.readFileSync(templatePath, "utf8");
     return fileContent;
   } catch (error) {
-    throw new Error(`Erreur lors de la récupération du template local: ${error.message}`);
+    throw new Error(`Error while retrieving the local template: ${error.message}`);
   }
 };
 
-// Convertir le YAML en Markdown
 const convertYamlToMarkdown = (yamlContent, formData) => {
-  const parsedYaml = yaml.load(yamlContent); // Convertir le YAML en objet JavaScript
+  const parsedYaml = yaml.load(yamlContent);
   let markdownContent = `### ${parsedYaml.name}\n\n${parsedYaml.description}\n\n`;
 
   parsedYaml.body.forEach((field) => {
@@ -74,7 +67,6 @@ const convertYamlToMarkdown = (yamlContent, formData) => {
   return markdownContent;
 };
 
-// Exporter les fonctions
 module.exports = {
   getSupportedTypes,
   fetchYamlTemplate,

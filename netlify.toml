@@ -3,4 +3,3 @@
 
 [functions]
   included_files = [".github/ISSUE_TEMPLATE/**"]
-  external_node_modules = ["node-fetch"]

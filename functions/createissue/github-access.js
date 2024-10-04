@@ -4,9 +4,9 @@ const privateKey = process.env.GITHUB_PRIVATE_KEY.replace(/\\n/g, "\n");
 
 const generateJWT = () => {
   const payload = {
-    iat: Math.floor(Date.now() / 1000), // Temps actuel
-    exp: Math.floor(Date.now() / 1000) + 600, // Expire dans 10 minutes
-    iss: process.env.GITHUB_APP_ID, // ID de l'App GitHub (de Netlify Environment Variables)
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + 600,
+    iss: process.env.GITHUB_APP_ID,
   };
   return require("jsonwebtoken").sign(payload, privateKey, { algorithm: "RS256" });
 };
