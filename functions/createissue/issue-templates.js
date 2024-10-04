@@ -48,11 +48,10 @@ const fetchYamlTemplate = (templateFile) => {
 
 const convertYamlToMarkdown = (yamlContent, formData) => {
   const parsedYaml = yaml.load(yamlContent);
-  let markdownContent = `### ${parsedYaml.name}\n\n${parsedYaml.description}\n\n`;
+  let markdownContent = "";
 
   parsedYaml.body.forEach((field) => {
     markdownContent += `### ${field.attributes.label}\n`;
-    markdownContent += `${field.attributes.description}\n\n`;
 
     if (field.type === "input" || field.type === "textarea") {
       markdownContent += `${formData[field.id] || field.attributes.placeholder}\n\n`;
