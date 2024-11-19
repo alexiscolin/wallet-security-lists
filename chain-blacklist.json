@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "chainId": "add a chain to the blacklist",
+    "submissionDate": "2024-10-04T17:43:48Z",
+    "threatLevel": "e",
+    "userNotes": [
+      {
+        "userName": "auto-wallet-issue[bot]",
+        "userNote": "e.g. fakechain-3",
+        "noteDate": "2024-10-04T17:43:48Z"
+      }
+    ]
+  }
+]
